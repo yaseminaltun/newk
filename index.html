@@ -33,7 +33,10 @@
       color:#fff;
     }
 
+    /* ✅ Kartı confetti’nin altına sabitle */
     .card{
+      position: relative;
+      z-index: 1;
       width:min(860px,96vw);
       padding:18px;
       border-radius:22px;
@@ -198,10 +201,12 @@
       to{transform:translateX(-50%) rotate(2deg)}
     }
 
+    /* ✅ KONFETİ EN ÜSTTE */
     .confetti{
       position:fixed;
       inset:0;
       pointer-events:none;
+      z-index: 9999; /* ✅ yazı ve foto üstünde */
     }
     .piece{
       position:absolute;
@@ -275,46 +280,47 @@
   </main>
 
   <script>
-    const confetti=document.getElementById("confetti");
-    const song=document.getElementById("song");
-    const flame=document.getElementById("flame");
-    const toggleMusicBtn=document.getElementById("toggleMusicBtn");
+    const confetti = document.getElementById("confetti");
+    const song = document.getElementById("song");
+    const flame = document.getElementById("flame");
+    const toggleMusicBtn = document.getElementById("toggleMusicBtn");
 
-    const burst=()=>{
-      for(let i=0;i<120;i++){
-        const p=document.createElement("div");
-        p.className="piece";
-        p.style.left=Math.random()*100+"vw";
-        p.style.width="8px";
-        p.style.height="12px";
-        p.style.background=`hsl(${Math.random()*360},90%,60%)`;
-        p.style.animationDuration=(Math.random()*2+2)+"s";
+    const burst = () => {
+      for(let i=0;i<140;i++){
+        const p = document.createElement("div");
+        p.className = "piece";
+        p.style.left = Math.random()*100 + "vw";
+        p.style.width = (Math.random()*6+6) + "px";
+        p.style.height = (Math.random()*10+8) + "px";
+        p.style.borderRadius = (Math.random()>0.5 ? "2px" : "999px");
+        p.style.background = `hsl(${Math.random()*360},90%,60%)`;
+        p.style.animationDuration = (Math.random()*2+1.8) + "s";
         confetti.appendChild(p);
-        setTimeout(()=>p.remove(),4000);
+        setTimeout(()=>p.remove(), 4000);
       }
     };
 
-    const show=v=>{
-      document.querySelectorAll(".view").forEach(s=>s.classList.remove("active"));
-      document.getElementById(v).classList.add("active");
-      window.scrollTo({top:0,behavior:"smooth"});
+    const show = (id) => {
+      document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      window.scrollTo({top:0, behavior:"smooth"});
     };
 
-    document.getElementById("goCakeBtn").onclick=()=>show("viewCake");
-    document.getElementById("backBookBtn").onclick=()=>show("viewBook");
-    document.getElementById("burstBtn").onclick=burst;
+    document.getElementById("goCakeBtn").onclick = ()=> show("viewCake");
+    document.getElementById("backBookBtn").onclick = ()=> show("viewBook");
+    document.getElementById("burstBtn").onclick = burst;
 
-    toggleMusicBtn.onclick=()=>{
+    toggleMusicBtn.onclick = async () => {
       if(song.paused){
-        song.play();
-        toggleMusicBtn.textContent="⏸ Şarkıyı durdur";
+        try { await song.play(); toggleMusicBtn.textContent="⏸ Şarkıyı durdur"; }
+        catch { /* autoplay engeli olabilir */ }
       }else{
         song.pause();
         toggleMusicBtn.textContent="▶️ Şarkıyı başlat";
       }
     };
 
-    document.getElementById("blowBtn").onclick=()=>{
+    document.getElementById("blowBtn").onclick = () => {
       flame.classList.toggle("off");
       burst();
     };
