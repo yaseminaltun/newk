@@ -4,341 +4,234 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>İyi ki doğdun Kübra!</title>
+
   <style>
     :root{
-      --bg: #F4B4C4;   /* ✅ tek ton toz pembe */
-      --card: rgba(255,255,255,.18);
-      --cardBorder: rgba(255,255,255,.30);
-      --shadow: rgba(0,0,0,.25);
+      --bg:#F4B4C4;
+      --card:rgba(255,255,255,.18);
+      --border:rgba(255,255,255,.3);
+      --shadow:rgba(0,0,0,.25);
       --accent1:#ffd56a;
       --accent2:#ff9bd1;
-      --ink:#1b1b1b;
     }
 
-    *{ box-sizing:border-box; }
+    *{box-sizing:border-box}
 
-    /* ✅ Arka planı HER YERDE sabitle */
-    html, body{
-      height: 100%;
-      background: #F4B4C4 !important;
-      background-color: #F4B4C4 !important;
+    html,body{
+      height:100%;
+      background:#F4B4C4 !important;
     }
 
-    /* ✅ Arka plan her yerde tek renk + scroll açık */
     body{
       margin:0;
-      min-height:100vh;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:#fff;
-
-      background: var(--bg) !important;
-      overflow-x:hidden;
-      overflow-y:auto;
-
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       display:flex;
       justify-content:center;
-      padding: 18px;
-      padding-bottom: 120px; /* desktop: audio bar kapatmasın */
+      overflow-y:auto;
+      padding:18px;
+      padding-bottom:60px;
+      color:#fff;
     }
 
     .card{
-      width:min(860px, 96vw);
-      padding: 18px;
-      border-radius: 22px;
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.18);
-      box-shadow: 0 18px 50px var(--shadow);
-      backdrop-filter: blur(10px);
+      width:min(860px,96vw);
+      padding:18px;
+      border-radius:22px;
+      background:rgba(255,255,255,.1);
+      border:1px solid var(--border);
+      box-shadow:0 18px 50px var(--shadow);
+      backdrop-filter:blur(10px);
     }
 
-    .view{ display:none; }
-    .view.active{ display:block; }
+    .view{display:none}
+    .view.active{display:block}
 
     .header{
       text-align:center;
-      margin-bottom: 10px;
+      margin-bottom:10px;
     }
     .header h1{
-      margin: 0 0 6px;
-      font-size: clamp(22px, 3.6vw, 38px);
-      letter-spacing: .2px;
-      color: #fff;
+      margin:0;
+      font-size:clamp(22px,3.5vw,38px);
     }
 
-    /* ✅ Giriş ekranı: Foto üstte, mesaj altta */
+    /* ---- GİRİŞ ---- */
     .introStack{
       display:flex;
       flex-direction:column;
-      gap: 14px;
-      margin-top: 10px;
+      gap:14px;
+      margin-top:12px;
     }
 
     .panel{
-      background: var(--card);
-      border: 1px solid var(--cardBorder);
-      border-radius: 18px;
-      box-shadow: 0 12px 30px rgba(0,0,0,.18);
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
       overflow:hidden;
+      box-shadow:0 12px 30px rgba(0,0,0,.18);
     }
 
-    /* ✅ Foto alanını kısalt + boşluğu azalt */
     .photoBox{
-      width: 100%;
-      height: min(42vh, 360px);
+      height:min(42vh,360px);
       display:flex;
       align-items:center;
       justify-content:center;
-      padding: 10px;
-      background: rgba(255,255,255,.14);
+      padding:10px;
+      background:rgba(255,255,255,.14);
     }
 
-    /* ✅ Foto KIRPILMAZ: contain + biraz küçült + sola döndür */
     .photoBox img{
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      transform: rotate(-90deg) scale(0.92);
-      transform-origin: center;
-      border-radius: 12px;
-      background: rgba(255,255,255,.55);
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      transform:rotate(-90deg) scale(.92);
+      border-radius:12px;
+      background:rgba(255,255,255,.55);
     }
 
     .msgBox{
-      padding: 18px;
-      color: rgba(0,0,0,.88);
-      background: rgba(255,255,255,.65);
+      padding:18px;
+      background:rgba(255,255,255,.65);
+      color:rgba(0,0,0,.85);
     }
     .msgBox h2{
-      margin: 0 0 10px;
-      font-size: clamp(18px, 2.8vw, 26px);
-      color: rgba(0,0,0,.88);
+      margin:0 0 10px;
+      font-size:clamp(18px,2.6vw,26px);
     }
     .msgBox p{
       margin:0;
-      font-size: clamp(14px, 2.2vw, 18px);
-      line-height: 1.6;
-      color: rgba(0,0,0,.78);
+      line-height:1.6;
+      font-size:clamp(14px,2.2vw,18px);
     }
 
+    /* ---- BUTONLAR ---- */
     .controls{
       display:flex;
       gap:10px;
       justify-content:center;
       flex-wrap:wrap;
-      margin-top: 14px;
+      margin-top:14px;
     }
 
     button{
       border:0;
-      padding: 12px 16px;
-      border-radius: 14px;
-      font-weight: 800;
+      padding:12px 16px;
+      border-radius:14px;
+      font-weight:800;
       cursor:pointer;
-      color:#111;
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
-      box-shadow: 0 10px 24px rgba(0,0,0,.22);
-      transition: transform .08s ease;
+      background:linear-gradient(135deg,var(--accent1),var(--accent2));
+      box-shadow:0 10px 24px rgba(0,0,0,.22);
     }
-    button:active{ transform: translateY(1px) scale(.99); }
+    button:active{transform:scale(.97)}
 
     .ghost{
-      background: rgba(255,255,255,.20);
+      background:rgba(255,255,255,.25);
       color:#fff;
-      border: 1px solid rgba(255,255,255,.30);
-    }
-    .mini{ padding: 10px 14px; }
-
-    /* ✅ Audio bar desktop: altta */
-    .audioBar{
-      position: fixed;
-      left: 50%;
-      bottom: 14px;
-      transform: translateX(-50%);
-      display:flex;
-      gap:10px;
-      align-items:center;
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: rgba(0,0,0,.28);
-      border: 1px solid rgba(255,255,255,.16);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 12px 30px rgba(0,0,0,.25);
-      z-index: 20;
-    }
-    .audioBar span{
-      font-size: 13px;
-      opacity:.92;
-      white-space: nowrap;
+      border:1px solid rgba(255,255,255,.35);
     }
 
-    /* ✅ mobilde bar üste taşınsın ki butonları kapatmasın */
-    @media (max-width: 820px){
-      .audioBar{
-        top: 12px;
-        bottom: auto;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      body{ padding-bottom: 36px; }
-    }
-
-    /* Autoplay blocked overlay */
-    .autoplayOverlay{
-      position: fixed;
-      inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      background: rgba(0,0,0,.55);
-      z-index: 50;
-      padding: 18px;
-    }
-    .autoplayOverlay.active{ display:flex; }
-    .autoplayCard{
-      width: min(520px, 92vw);
-      padding: 18px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.14);
-      border: 1px solid rgba(255,255,255,.22);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 22px 60px rgba(0,0,0,.35);
-      text-align:center;
-      color:#fff;
-    }
-    .autoplayCard h3{ margin: 0 0 6px; font-size: 18px; }
-    .autoplayCard p{ margin: 0 0 12px; opacity:.92; }
-
-    /* Cake */
+    /* ---- PASTA ---- */
     .cakeWrap{
       display:flex;
       justify-content:center;
-      margin: 10px auto 8px;
-      position:relative;
-      height: 280px;
+      margin-top:10px;
+      height:280px;
     }
     .cake{
       position:relative;
-      width: 280px;
-      height: 220px;
-      transform: translateY(20px);
+      width:280px;
+      height:220px;
+      transform:translateY(20px);
     }
     .plate{
-      position:absolute; left:50%; transform:translateX(-50%);
+      position:absolute;
       bottom:0;
-      width: 320px; height: 26px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.18);
-      filter: blur(.2px);
+      left:50%;
+      transform:translateX(-50%);
+      width:320px;
+      height:26px;
+      border-radius:999px;
+      background:rgba(255,255,255,.2);
     }
     .layer{
-      position:absolute; left:50%; transform:translateX(-50%);
-      width: 260px;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,.18);
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      width:260px;
+      border-radius:22px;
     }
-    .layer.top{ top: 64px; height: 56px; background: linear-gradient(180deg, #ffb3d9, #ff7fbf); }
-    .layer.mid{ top: 114px; height: 62px; background: linear-gradient(180deg, #ffe6a6, #ffcc4d); }
-    .layer.bot{ top: 168px; height: 64px; background: linear-gradient(180deg, #a7e4ff, #4fb9ff); }
-
-    .icing{
-      position:absolute; left:50%; transform:translateX(-50%);
-      top: 54px;
-      width: 270px; height: 36px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.22);
-      box-shadow: inset 0 -10px 18px rgba(0,0,0,.08);
-    }
-    .drip{
-      position:absolute; top: 78px;
-      width: 18px; height: 38px;
-      background: rgba(255,255,255,.22);
-      border-radius: 0 0 18px 18px;
-      filter: blur(.1px);
-      box-shadow: inset 0 -8px 12px rgba(0,0,0,.06);
-    }
-    .drip:nth-child(1){ left: 30px; height: 42px; }
-    .drip:nth-child(2){ left: 88px; height: 30px; }
-    .drip:nth-child(3){ left: 150px; height: 46px; }
-    .drip:nth-child(4){ left: 210px; height: 34px; }
+    .layer.top{top:64px;height:56px;background:#ff7fbf}
+    .layer.mid{top:114px;height:62px;background:#ffcc4d}
+    .layer.bot{top:168px;height:64px;background:#4fb9ff}
 
     .candle{
-      position:absolute; left:50%; transform:translateX(-50%);
-      top: 16px;
-      width: 18px; height: 70px;
-      border-radius: 10px;
-      background: repeating-linear-gradient(45deg, #fff 0 8px, #ff5aa5 8px 16px);
-      border: 1px solid rgba(0,0,0,.15);
-      box-shadow: 0 10px 18px rgba(0,0,0,.18);
+      position:absolute;
+      top:16px;
+      left:50%;
+      transform:translateX(-50%);
+      width:18px;
+      height:70px;
+      border-radius:10px;
+      background:repeating-linear-gradient(45deg,#fff 0 8px,#ff5aa5 8px 16px);
     }
     .wick{
-      position:absolute; left:50%; transform:translateX(-50%);
-      top: -10px;
-      width: 3px; height: 12px;
-      background:#2a2a2a;
-      border-radius: 2px;
+      position:absolute;
+      top:-10px;
+      left:50%;
+      transform:translateX(-50%);
+      width:3px;
+      height:12px;
+      background:#333;
     }
     .flame{
       position:absolute;
-      left:50%; transform:translateX(-50%);
       top:-34px;
-      width: 28px; height: 38px;
-      background: radial-gradient(circle at 50% 60%, #fff7b0 0 30%, #ffb300 55%, #ff5a00 80%);
-      border-radius: 50%;
-      filter: drop-shadow(0 0 18px rgba(255,200,60,.8));
-      transform-origin: 50% 90%;
-      animation: flicker .12s infinite alternate ease-in-out;
+      left:50%;
+      transform:translateX(-50%);
+      width:28px;
+      height:38px;
+      background:radial-gradient(circle,#fff7b0,#ff5a00);
+      border-radius:50%;
+      animation:flicker .12s infinite alternate;
     }
-    @keyframes flicker{
-      from { transform: translateX(-50%) rotate(-2deg) scaleY(1.02); opacity:.95; }
-      to   { transform: translateX(-50%) rotate( 2deg) scaleY(.98); opacity:1; }
-    }
-    .flame.off{ opacity:0; animation:none; filter:none; }
+    .flame.off{opacity:0;animation:none}
 
-    /* Confetti */
+    @keyframes flicker{
+      from{transform:translateX(-50%) rotate(-2deg)}
+      to{transform:translateX(-50%) rotate(2deg)}
+    }
+
+    /* ---- KONFETİ ---- */
     .confetti{
       position:fixed;
       inset:0;
       pointer-events:none;
-      overflow:hidden;
-      z-index: 10;
     }
     .piece{
       position:absolute;
       top:-10px;
-      width:10px; height:14px;
-      opacity:.9;
-      transform: rotate(0deg);
-      animation: fall linear forwards;
+      animation:fall linear forwards;
     }
     @keyframes fall{
-      to{ transform: translateY(110vh) rotate(720deg); }
+      to{transform:translateY(110vh) rotate(720deg)}
     }
   </style>
 </head>
+
 <body>
   <div class="confetti" id="confetti"></div>
 
-  <div class="autoplayOverlay" id="autoplayOverlay" aria-hidden="true">
-    <div class="autoplayCard">
-      <h3>🔊 Müziği başlatmak için bir dokunuş gerekiyor</h3>
-      <p>Tarayıcı ses için izin istiyor. Aşağıya basınca şarkı başlayacak.</p>
-      <button id="startAudioBtn">Müziği Başlat 🎵</button>
-    </div>
-  </div>
+  <main class="card">
 
-  <main class="card" role="main">
-
-    <!-- VIEW 1 -->
+    <!-- GİRİŞ -->
     <section class="view active" id="viewBook">
       <div class="header">
         <h1>Doğum Günün Kutlu Olsun Kübra! 🎉</h1>
       </div>
 
       <div class="introStack">
-        <div class="panel">
-          <div class="photoBox">
-            <img id="bookPhoto" alt="Fotoğraf" src="Snapchat-3435158.jpg" />
-          </div>
+        <div class="panel photoBox">
+          <img src="Snapchat-3435158.jpg" alt="Fotoğraf">
         </div>
 
         <div class="panel msgBox">
@@ -355,163 +248,78 @@
       <div class="controls">
         <button id="goCakeBtn">Pastaya geç 🎂</button>
         <button id="burstBtn" class="ghost">Konfeti patlat ✨</button>
+        <button id="toggleMusicBtn" class="ghost">⏸ Şarkıyı durdur</button>
       </div>
     </section>
 
-    <!-- VIEW 2 -->
+    <!-- PASTA -->
     <section class="view" id="viewCake">
       <div class="header">
-        <h1>🎂 Kübra için pasta zamanı!</h1>
-        <p>Mumu üfle ✨</p>
+        <h1>🎂 Pasta zamanı!</h1>
       </div>
 
-      <section class="cakeWrap" aria-label="Doğum günü pastası">
-        <div class="cake" role="img" aria-label="Mumlu doğum günü pastası">
+      <div class="cakeWrap">
+        <div class="cake">
           <div class="candle">
             <div class="wick"></div>
             <div class="flame" id="flame"></div>
           </div>
-
-          <div class="icing">
-            <div class="drip"></div><div class="drip"></div><div class="drip"></div><div class="drip"></div>
-          </div>
-
           <div class="layer top"></div>
           <div class="layer mid"></div>
           <div class="layer bot"></div>
           <div class="plate"></div>
         </div>
-      </section>
+      </div>
 
       <div class="controls">
-        <button id="blowBtn" class="ghost">Mumu Söndür 💨</button>
+        <button id="blowBtn" class="ghost">Mumu söndür 💨</button>
         <button id="backBookBtn">Geri dön ↩️</button>
       </div>
     </section>
 
-    <audio id="birthdaySong" src="dogum-gunu-kubra.mp3" preload="auto" loop></audio>
+    <audio id="song" src="dogum-gunu-kubra.mp3" loop></audio>
   </main>
 
-  <div class="audioBar" aria-label="Müzik kontrol çubuğu">
-    <button class="mini ghost" id="toggleMusicBtn">⏸ Durdur</button>
-    <span id="musicStatus">Şarkı çalıyor…</span>
-  </div>
-
   <script>
-    const BOOK_PHOTO = "Snapchat-3435158.jpg";
-    const AUDIO_SRC  = "dogum-gunu-kubra.mp3";
+    const confetti=document.getElementById("confetti");
+    const song=document.getElementById("song");
+    const flame=document.getElementById("flame");
 
-    const confettiRoot = document.getElementById("confetti");
-    const flame = document.getElementById("flame");
-
-    const viewBook = document.getElementById("viewBook");
-    const viewCake = document.getElementById("viewCake");
-
-    const goCakeBtn = document.getElementById("goCakeBtn");
-    const backBookBtn = document.getElementById("backBookBtn");
-    const burstBtn = document.getElementById("burstBtn");
-
-    const song = document.getElementById("birthdaySong");
-    const toggleMusicBtn = document.getElementById("toggleMusicBtn");
-    const musicStatus = document.getElementById("musicStatus");
-
-    const autoplayOverlay = document.getElementById("autoplayOverlay");
-    const startAudioBtn = document.getElementById("startAudioBtn");
-
-    const bookPhoto = document.getElementById("bookPhoto");
-    bookPhoto.src = BOOK_PHOTO;
-    song.src = AUDIO_SRC;
-
-    function burstConfetti(count = 140) {
-      for (let i = 0; i < count; i++) {
-        const p = document.createElement("div");
-        p.className = "piece";
-        p.style.left = Math.random() * 100 + "vw";
-        p.style.animationDuration = (Math.random() * 1.8 + 1.6) + "s";
-        p.style.animationDelay = (Math.random() * 0.2) + "s";
-        p.style.borderRadius = (Math.random() > 0.5 ? "2px" : "999px");
-        p.style.background = `hsl(${Math.floor(Math.random() * 360)}, 90%, 60%)`;
-        p.style.transform = `rotate(${Math.random() * 360}deg)`;
-        p.style.width = (Math.random() * 8 + 6) + "px";
-        p.style.height = (Math.random() * 12 + 8) + "px";
-        confettiRoot.appendChild(p);
-        setTimeout(() => p.remove(), 4000);
+    const burst=()=>{
+      for(let i=0;i<120;i++){
+        const p=document.createElement("div");
+        p.className="piece";
+        p.style.left=Math.random()*100+"vw";
+        p.style.width="8px";
+        p.style.height="12px";
+        p.style.background=`hsl(${Math.random()*360},90%,60%)`;
+        p.style.animationDuration=(Math.random()*2+2)+"s";
+        confetti.appendChild(p);
+        setTimeout(()=>p.remove(),4000);
       }
-    }
+    };
 
-    function setFlame(on) {
-      flame.classList.toggle("off", !on);
-      if (!on) burstConfetti(180);
-    }
+    const show=v=>{
+      document.querySelectorAll(".view").forEach(s=>s.classList.remove("active"));
+      document.getElementById(v).classList.add("active");
+      window.scrollTo({top:0,behavior:"smooth"});
+    };
 
-    function showView(which) {
-      if (which === "cake") {
-        viewBook.classList.remove("active");
-        viewCake.classList.add("active");
-        burstConfetti(120);
-      } else {
-        viewCake.classList.remove("active");
-        viewBook.classList.add("active");
-      }
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    document.getElementById("goCakeBtn").onclick=()=>show("viewCake");
+    document.getElementById("backBookBtn").onclick=()=>show("viewBook");
+    document.getElementById("burstBtn").onclick=burst;
 
-    function syncMusicUI() {
-      const playing = !song.paused;
-      toggleMusicBtn.textContent = playing ? "⏸ Durdur" : "▶️ Başlat";
-      musicStatus.textContent = playing ? "Şarkı çalıyor…" : "Şarkı durdu.";
-    }
+    document.getElementById("toggleMusicBtn").onclick=()=>{
+      if(song.paused){song.play();toggleMusicBtn.textContent="⏸ Şarkıyı durdur";}
+      else{song.pause();toggleMusicBtn.textContent="▶️ Şarkıyı başlat";}
+    };
 
-    async function tryAutoplay() {
-      try {
-        song.currentTime = 0;
-        await song.play();
-        syncMusicUI();
-      } catch {
-        autoplayOverlay.classList.add("active");
-        autoplayOverlay.setAttribute("aria-hidden", "false");
-        syncMusicUI();
-      }
-    }
+    document.getElementById("blowBtn").onclick=()=>{
+      flame.classList.toggle("off");
+      burst();
+    };
 
-    async function startAudioFromUserGesture() {
-      try {
-        await song.play();
-        autoplayOverlay.classList.remove("active");
-        autoplayOverlay.setAttribute("aria-hidden", "true");
-        syncMusicUI();
-        burstConfetti(120);
-      } catch {
-        alert("Ses başlatılamadı. Telefon sessizde olmasın ve tekrar dene.");
-      }
-    }
-
-    window.addEventListener("load", () => {
-      setFlame(true);
-      burstConfetti(60);
-      tryAutoplay();
-    });
-
-    startAudioBtn.addEventListener("click", startAudioFromUserGesture);
-
-    toggleMusicBtn.addEventListener("click", async () => {
-      if (song.paused) await startAudioFromUserGesture();
-      else { song.pause(); syncMusicUI(); }
-    });
-
-    goCakeBtn.addEventListener("click", () => showView("cake"));
-    backBookBtn.addEventListener("click", () => showView("book"));
-    burstBtn.addEventListener("click", () => burstConfetti(240));
-
-    document.getElementById("blowBtn").addEventListener("click", () => setFlame(false));
-
-    document.querySelector(".cake").addEventListener("click", () => {
-      const off = flame.classList.contains("off");
-      setFlame(off);
-    });
-
-    song.addEventListener("play", syncMusicUI);
-    song.addEventListener("pause", syncMusicUI);
+    window.onload=()=>song.play().catch(()=>{});
   </script>
 </body>
 </html>
