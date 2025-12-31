@@ -7,7 +7,10 @@
 
   <style>
     :root{
-      --bg:#F4B4C4;
+      /* ✅ Eski arka plan (ilk yaptığımız gradient) */
+      --bg1:#0b1020;
+      --bg2:#1a2a6c;
+
       --card:rgba(255,255,255,.18);
       --border:rgba(255,255,255,.3);
       --shadow:rgba(0,0,0,.25);
@@ -17,10 +20,8 @@
 
     *{box-sizing:border-box}
 
-    html,body{
-      height:100%;
-      background:#F4B4C4 !important;
-    }
+    /* ✅ Pembe sabitlemeyi kaldırdık */
+    html,body{ height:100%; }
 
     body{
       margin:0;
@@ -31,6 +32,12 @@
       padding:18px;
       padding-bottom:60px;
       color:#fff;
+
+      /* ✅ Eski background geri geldi */
+      background:
+        radial-gradient(1200px 800px at 20% 10%, rgba(253,187,45,.25), transparent 60%),
+        radial-gradient(900px 700px at 80% 20%, rgba(178,31,31,.22), transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
     }
 
     /* ✅ Kartı confetti’nin altına sabitle */
@@ -201,12 +208,12 @@
       to{transform:translateX(-50%) rotate(2deg)}
     }
 
-    /* ✅ KONFETİ EN ÜSTTE */
+    /* ✅ KONFETİ EN ÜSTTE (foto+yazı üstünde) */
     .confetti{
       position:fixed;
       inset:0;
       pointer-events:none;
-      z-index: 9999; /* ✅ yazı ve foto üstünde */
+      z-index: 9999;
     }
     .piece{
       position:absolute;
