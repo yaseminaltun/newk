@@ -55,7 +55,6 @@
       font-size:clamp(22px,3.5vw,38px);
     }
 
-    /* ---- GİRİŞ ---- */
     .introStack{
       display:flex;
       flex-direction:column;
@@ -104,7 +103,6 @@
       font-size:clamp(14px,2.2vw,18px);
     }
 
-    /* ---- BUTONLAR ---- */
     .controls{
       display:flex;
       gap:10px;
@@ -130,7 +128,6 @@
       border:1px solid rgba(255,255,255,.35);
     }
 
-    /* ---- PASTA ---- */
     .cakeWrap{
       display:flex;
       justify-content:center;
@@ -201,7 +198,6 @@
       to{transform:translateX(-50%) rotate(2deg)}
     }
 
-    /* ---- KONFETİ ---- */
     .confetti{
       position:fixed;
       inset:0;
@@ -223,7 +219,6 @@
 
   <main class="card">
 
-    <!-- GİRİŞ -->
     <section class="view active" id="viewBook">
       <div class="header">
         <h1>Doğum Günün Kutlu Olsun Kübra! 🎉</h1>
@@ -248,11 +243,10 @@
       <div class="controls">
         <button id="goCakeBtn">Pastaya geç 🎂</button>
         <button id="burstBtn" class="ghost">Konfeti patlat ✨</button>
-        <button id="toggleMusicBtn" class="ghost">⏸ Şarkıyı durdur</button>
+        <button id="toggleMusicBtn" class="ghost">▶️ Şarkıyı başlat</button>
       </div>
     </section>
 
-    <!-- PASTA -->
     <section class="view" id="viewCake">
       <div class="header">
         <h1>🎂 Pasta zamanı!</h1>
@@ -284,6 +278,7 @@
     const confetti=document.getElementById("confetti");
     const song=document.getElementById("song");
     const flame=document.getElementById("flame");
+    const toggleMusicBtn=document.getElementById("toggleMusicBtn");
 
     const burst=()=>{
       for(let i=0;i<120;i++){
@@ -309,17 +304,20 @@
     document.getElementById("backBookBtn").onclick=()=>show("viewBook");
     document.getElementById("burstBtn").onclick=burst;
 
-    document.getElementById("toggleMusicBtn").onclick=()=>{
-      if(song.paused){song.play();toggleMusicBtn.textContent="⏸ Şarkıyı durdur";}
-      else{song.pause();toggleMusicBtn.textContent="▶️ Şarkıyı başlat";}
+    toggleMusicBtn.onclick=()=>{
+      if(song.paused){
+        song.play();
+        toggleMusicBtn.textContent="⏸ Şarkıyı durdur";
+      }else{
+        song.pause();
+        toggleMusicBtn.textContent="▶️ Şarkıyı başlat";
+      }
     };
 
     document.getElementById("blowBtn").onclick=()=>{
       flame.classList.toggle("off");
       burst();
     };
-
-    window.onload=()=>song.play().catch(()=>{});
   </script>
 </body>
 </html>
