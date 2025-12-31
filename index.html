@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>İyi ki doğdun Kübra!</title>
+  <style>
+    :root{
+      --bg1:#0b1020; --bg2:#1a2a6c;
+      --paper:#f7f2e7;
+      --ink:#1b1b1b;
+      --shadow: rgba(0,0,0,.35);
+      --accent1:#ffd56a;
+      --accent2:#ff9bd1;
+      --accent3:#4fb9ff;
+      --radius:24px;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:#fff;
+      background:
+        radial-gradient(1200px 800px at 20% 10%, rgba(253,187,45,.25), transparent 60%),
+        radial-gradient(900px 700px at 80% 20%, rgba(178,31,31,.22), transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow:hidden;
+      padding: 18px;
+    }
+
+    /* Top-level card */
+    .card{
+      width:min(900px, 96vw);
+      padding: 18px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 18px 50px var(--shadow);
+      backdrop-filter: blur(10px);
+      position:relative;
+    }
+
+    /* Views */
+    .view{ display:none; }
+    .view.active{ display:block; }
+
+    /* Header */
+    .header{
+      text-align:center;
+      margin-bottom: 10px;
+    }
+    .header h1{
+      margin: 0 0 6px;
+      font-size: clamp(22px, 3.6vw, 38px);
+      letter-spacing: .2px;
+    }
+    .header p{
+      margin: 0 0 8px;
+      opacity:.92;
+      font-size: clamp(14px, 2.2vw, 18px);
+    }
+
+    /* Book */
+    .bookWrap{
+      display:flex;
+      justify-content:center;
+      padding: 8px 6px 2px;
+    }
+    .book{
+      width: min(860px, 92vw);
+      aspect-ratio: 16 / 10;
+      background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 26px;
+      box-shadow: 0 22px 60px rgba(0,0,0,.35);
+      position:relative;
+      overflow:hidden;
+      padding: 18px;
+    }
+    .book::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(900px 500px at 50% 50%, rgba(0,0,0,.08), transparent 60%);
+      pointer-events:none;
+    }
+
+    /* Paper pages */
+    .pages{
+      position:relative;
+      width:100%;
+      height:100%;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      padding: 10px;
+    }
+    .page{
+      background: linear-gradient(180deg, #fbf7ef, #f2ecdf);
+      color: var(--ink);
+      border-radius: 18px;
+      position:relative;
+      overflow:hidden;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.06);
+    }
+    /* Spine shadow in middle */
+    .spine{
+      position:absolute;
+      left:50%;
+      top: 10px;
+      bottom: 10px;
+      width: 34px;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, rgba(0,0,0,.10), rgba(0,0,0,.02), rgba(0,0,0,.10));
+      border-radius: 18px;
+      pointer-events:none;
+      filter: blur(.2px);
+      opacity:.65;
+    }
+
+    /* Left page photo frame */
+    .photoFrame{
+      height: 100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+    }
+    .photoMat{
+      width: 92%;
+      height: 86%;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow:
+        0 18px 30px rgba(0,0,0,.18),
+        inset 0 0 0 10px rgba(255,255,255,.85),
+        inset 0 0 0 1px rgba(0,0,0,.08);
+      position:relative;
+      overflow:hidden;
+    }
+    .photoMat img{
+      position:absolute;
+      top:50%;
+      left:50%;
+      /* 90 derece döndür */
+      transform: translate(-50%, -50%) rotate(90deg) scale(1.1);
+      height: 120%;
+      width: auto;
+      object-fit: cover;
+      filter: saturate(1.05) contrast(1.02);
+    }
+
+    /* Right page text */
+    .msg{
+      padding: 22px 22px 18px;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap: 12px;
+    }
+    .msg h2{
+      margin:0;
+      font-size: clamp(18px, 2.8vw, 26px);
+      letter-spacing:.2px;
+    }
+    .msg p{
+      margin:0;
+      font-size: clamp(14px, 2.3vw, 18px);
+      line-height: 1.55;
+      color: rgba(0,0,0,.78);
+    }
+    .msg .sig{
+      margin-top: 8px;
+      font-weight: 700;
+      color: rgba(0,0,0,.72);
+      opacity:.95;
+    }
+    .msg .highlight{
+      display:inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(79,185,255,.22);
+      border: 1px solid rgba(79,185,255,.35);
+      color: rgba(0,0,0,.72);
+      font-weight: 700;
+      width: fit-content;
+    }
+
+    /* Controls */
+    .controls{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top: 14px;
+    }
+    button{
+      border:0;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-weight: 800;
+      cursor:pointer;
+      color:#111;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      box-shadow: 0 10px 24px rgba(0,0,0,.25);
+      transition: transform .08s ease, opacity .15s ease;
+    }
+    button:active{ transform: translateY(1px) scale(.99); }
+    .ghost{
+      background: rgba(255,255,255,.12);
+      color:#fff;
+      border: 1px solid rgba(255,255,255,.2);
+    }
+    .mini{
+      padding: 10px 14px;
+      font-weight: 800;
+    }
+
+    /* Bottom audio bar */
+    .audioBar{
+      position: fixed;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.28);
+      border: 1px solid rgba(255,255,255,.16);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+      z-index: 20;
+    }
+    .audioBar span{
+      font-size: 13px;
+      opacity:.92;
+      white-space: nowrap;
+    }
+
+    /* Autoplay blocked overlay */
+    .autoplayOverlay{
+      position: fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background: rgba(0,0,0,.55);
+      z-index: 50;
+      padding: 18px;
+    }
+    .autoplayOverlay.active{ display:flex; }
+    .autoplayCard{
+      width: min(520px, 92vw);
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 22px 60px rgba(0,0,0,.35);
+      text-align:center;
+    }
+    .autoplayCard h3{ margin: 0 0 6px; font-size: 18px; }
+    .autoplayCard p{ margin: 0 0 12px; opacity:.92; }
+
+    /* Cake section (your original cake, kept) */
+    .cakeWrap{
+      display:flex;
+      justify-content:center;
+      margin: 10px auto 8px;
+      position:relative;
+      height: 280px;
+    }
+    .cake{
+      position:relative;
+      width: 280px;
+      height: 220px;
+      transform: translateY(20px);
+    }
+    .plate{
+      position:absolute; left:50%; transform:translateX(-50%);
+      bottom:0;
+      width: 320px; height: 26px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      filter: blur(.2px);
+    }
+    .layer{
+      position:absolute; left:50%; transform:translateX(-50%);
+      width: 260px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    .layer.top{
+      top: 64px; height: 56px;
+      background: linear-gradient(180deg, #ffb3d9, #ff7fbf);
+    }
+    .layer.mid{
+      top: 114px; height: 62px;
+      background: linear-gradient(180deg, #ffe6a6, #ffcc4d);
+    }
+    .layer.bot{
+      top: 168px; height: 64px;
+      background: linear-gradient(180deg, #a7e4ff, #4fb9ff);
+    }
+    .icing{
+      position:absolute; left:50%; transform:translateX(-50%);
+      top: 54px;
+      width: 270px; height: 36px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.22);
+      box-shadow: inset 0 -10px 18px rgba(0,0,0,.08);
+    }
+    .drip{
+      position:absolute;
+      top: 78px;
+      width: 18px; height: 38px;
+      background: rgba(255,255,255,.22);
+      border-radius: 0 0 18px 18px;
+      filter: blur(.1px);
+      box-shadow: inset 0 -8px 12px rgba(0,0,0,.06);
+    }
+    .drip:nth-child(1){ left: 30px; height: 42px; }
+    .drip:nth-child(2){ left: 88px; height: 30px; }
+    .drip:nth-child(3){ left: 150px; height: 46px; }
+    .drip:nth-child(4){ left: 210px; height: 34px; }
+
+    .candle{
+      position:absolute;
+      left:50%; transform:translateX(-50%);
+      top: 16px;
+      width: 18px; height: 70px;
+      border-radius: 10px;
+      background: repeating-linear-gradient(
+        45deg,
+        #fff 0 8px,
+        #ff5aa5 8px 16px
+      );
+      border: 1px solid rgba(0,0,0,.15);
+      box-shadow: 0 10px 18px rgba(0,0,0,.18);
+    }
+    .wick{
+      position:absolute;
+      left:50%; transform:translateX(-50%);
+      top: -10px;
+      width: 3px; height: 12px;
+      background:#2a2a2a;
+      border-radius: 2px;
+    }
+    .flame{
+      position:absolute;
+      left:50%; transform:translateX(-50%);
+      top:-34px;
+      width: 28px; height: 38px;
+      background: radial-gradient(circle at 50% 60%, #fff7b0 0 30%, #ffb300 55%, #ff5a00 80%);
+      border-radius: 50% 50% 50% 50%;
+      filter: drop-shadow(0 0 18px rgba(255,200,60,.8));
+      transform-origin: 50% 90%;
+      animation: flicker .12s infinite alternate ease-in-out;
+    }
+    @keyframes flicker{
+      from { transform: translateX(-50%) rotate(-2deg) scaleY(1.02); opacity:.95; }
+      to   { transform: translateX(-50%) rotate( 2deg) scaleY(.98); opacity:1; }
+    }
+    .flame.off{ opacity:0; animation:none; filter:none; }
+
+    /* Confetti */
+    .confetti{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index: 10;
+    }
+    .piece{
+      position:absolute;
+      top:-10px;
+      width:10px; height:14px;
+      opacity:.9;
+      transform: rotate(0deg);
+      animation: fall linear forwards;
+    }
+    @keyframes fall{
+      to{ transform: translateY(110vh) rotate(720deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 820px){
+      .book{ aspect-ratio: 10 / 12; }
+      .pages{ grid-template-columns: 1fr; }
+      .spine{ display:none; }
+      .photoMat img{ transform: translate(-50%,-50%) rotate(90deg) scale(1.18); }
+      .msg{ padding: 18px 18px 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="confetti" id="confetti"></div>
+
+  <!-- Autoplay blocked overlay (only if needed) -->
+  <div class="autoplayOverlay" id="autoplayOverlay" aria-hidden="true">
+    <div class="autoplayCard">
+      <h3>🔊 Müziği başlatmak için bir dokunuş gerekiyor</h3>
+      <p>Tarayıcı ses için izin istiyor. Aşağıya basınca şarkı başlayacak ve sayfa normal devam edecek.</p>
+      <button id="startAudioBtn">Müziği Başlat 🎵</button>
+    </div>
+  </div>
+
+  <main class="card" role="main">
+
+    <!-- VIEW 1: BOOK -->
+    <section class="view active" id="viewBook">
+      <div class="header">
+        <h1>📖 Doğum Günün Kutlu Olsun Kübra!</h1>
+        <p>Sayfayı çevirince sürpriz var 🎂</p>
+      </div>
+
+      <div class="bookWrap">
+        <div class="book" aria-label="Açık kitap">
+          <div class="spine" aria-hidden="true"></div>
+          <div class="pages">
+            <div class="page" aria-label="Sol sayfa: fotoğraf">
+              <div class="photoFrame">
+                <div class="photoMat">
+                  <!-- Foto aynı klasörde: Snapchat-3435158.jpg -->
+                  <img id="bookPhoto" alt="Fotoğraf" src="Snapchat-3435158.jpg" />
+                </div>
+              </div>
+            </div>
+
+            <div class="page" aria-label="Sağ sayfa: mesaj">
+              <div class="msg">
+                <span class="highlight">💛 8 yılın hatrına</span>
+                <h2>Doğum günün kutlu olsun Kübra!</h2>
+                <p>
+                  Doğum günün kutlu olsun Kübra, iyi ki doğdunnn.
+                  Yeni yaşın mutluluk ve sağlık dolu olsun.
+                  Birlikte geçirdiğimiz 8 yılın her anı çok güzeldi,
+                  daha nice yılları beraber geçirelimm.
+                </p>
+                <div class="sig">— 💫</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls" aria-label="Kontroller">
+        <button id="goCakeBtn">Pastaya geç 🎂</button>
+        <button id="burstBtn" class="ghost">Konfeti patlat ✨</button>
+      </div>
+    </section>
+
+    <!-- VIEW 2: CAKE -->
+    <section class="view" id="viewCake">
+      <div class="header">
+        <h1 id="title">🎉 İyi ki doğdun Kübra!</h1>
+        <p class="sub" id="subtitle">Dilek tut ve mumu üfle ✨</p>
+      </div>
+
+      <section class="cakeWrap" aria-label="Doğum günü pastası">
+        <div class="cake" role="img" aria-label="Mumlu doğum günü pastası">
+          <div class="candle">
+            <div class="wick"></div>
+            <div class="flame" id="flame"></div>
+          </div>
+
+          <div class="icing">
+            <div class="drip"></div><div class="drip"></div><div class="drip"></div><div class="drip"></div>
+          </div>
+
+          <div class="layer top"></div>
+          <div class="layer mid"></div>
+          <div class="layer bot"></div>
+          <div class="plate"></div>
+        </div>
+      </section>
+
+      <div class="controls">
+        <button id="blowBtn" class="ghost">Mumu Söndür 💨</button>
+        <button id="backBookBtn">Kitaba dön 📖</button>
+      </div>
+    </section>
+
+    <!-- Audio: aynı klasörde olmalı -->
+    <audio id="birthdaySong" src="dogum-gunu-kubra.mp3" preload="auto" loop></audio>
+  </main>
+
+  <!-- bottom audio bar -->
+  <div class="audioBar" aria-label="Müzik kontrol çubuğu">
+    <button class="mini ghost" id="toggleMusicBtn">⏸ Durdur</button>
+    <span id="musicStatus">Şarkı çalıyor…</span>
+  </div>
+
+  <script>
+    // === Config
+    const BOOK_PHOTO = "Snapchat-3435158.jpg"; // istersen değiştir
+    const AUDIO_SRC  = "dogum-gunu-kubra.mp3";
+
+    // --- Elements
+    const confettiRoot = document.getElementById("confetti");
+    const flame = document.getElementById("flame");
+
+    const viewBook = document.getElementById("viewBook");
+    const viewCake = document.getElementById("viewCake");
+
+    const goCakeBtn = document.getElementById("goCakeBtn");
+    const backBookBtn = document.getElementById("backBookBtn");
+    const burstBtn = document.getElementById("burstBtn");
+
+    const song = document.getElementById("birthdaySong");
+    const toggleMusicBtn = document.getElementById("toggleMusicBtn");
+    const musicStatus = document.getElementById("musicStatus");
+
+    const autoplayOverlay = document.getElementById("autoplayOverlay");
+    const startAudioBtn = document.getElementById("startAudioBtn");
+
+    const bookPhoto = document.getElementById("bookPhoto");
+    bookPhoto.src = BOOK_PHOTO;
+    song.src = AUDIO_SRC;
+
+    // --- Confetti
+    function burstConfetti(count = 120) {
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement("div");
+        p.className = "piece";
+        p.style.left = Math.random() * 100 + "vw";
+        p.style.animationDuration = (Math.random() * 1.8 + 1.6) + "s";
+        p.style.animationDelay = (Math.random() * 0.2) + "s";
+        p.style.borderRadius = (Math.random() > 0.5 ? "2px" : "999px");
+        p.style.background = `hsl(${Math.floor(Math.random() * 360)}, 90%, 60%)`;
+        p.style.transform = `rotate(${Math.random() * 360}deg)`;
+        p.style.width = (Math.random() * 8 + 6) + "px";
+        p.style.height = (Math.random() * 12 + 8) + "px";
+        confettiRoot.appendChild(p);
+        setTimeout(() => p.remove(), 4000);
+      }
+    }
+
+    // --- Candle flame toggle
+    function setFlame(on) {
+      flame.classList.toggle("off", !on);
+      if (!on) burstConfetti(170);
+    }
+
+    // --- View switching
+    function showView(which) {
+      if (which === "cake") {
+        viewBook.classList.remove("active");
+        viewCake.classList.add("active");
+        burstConfetti(120);
+      } else {
+        viewCake.classList.remove("active");
+        viewBook.classList.add("active");
+      }
+    }
+
+    // --- Music UI
+    function syncMusicUI() {
+      const playing = !song.paused;
+      toggleMusicBtn.textContent = playing ? "⏸ Durdur" : "▶️ Başlat";
+      musicStatus.textContent = playing ? "Şarkı çalıyor…" : "Şarkı durdu.";
+    }
+
+    async function tryAutoplay() {
+      try {
+        song.currentTime = 0;
+        await song.play();
+        syncMusicUI();
+      } catch (e) {
+        // Autoplay blocked
+        autoplayOverlay.classList.add("active");
+        autoplayOverlay.setAttribute("aria-hidden", "false");
+        syncMusicUI();
+      }
+    }
+
+    async function startAudioFromUserGesture() {
+      try {
+        await song.play();
+        autoplayOverlay.classList.remove("active");
+        autoplayOverlay.setAttribute("aria-hidden", "true");
+        syncMusicUI();
+        burstConfetti(120);
+      } catch (e) {
+        alert("Ses başlatılamadı. Telefon sessizde olmasın ve tekrar dene.");
+      }
+    }
+
+    // --- Events
+    window.addEventListener("load", () => {
+      setFlame(true);
+      burstConfetti(80);
+      // Site açılır açılmaz müziği başlatmayı dene
+      tryAutoplay();
+    });
+
+    startAudioBtn.addEventListener("click", startAudioFromUserGesture);
+
+    toggleMusicBtn.addEventListener("click", async () => {
+      if (song.paused) {
+        await startAudioFromUserGesture();
+      } else {
+        song.pause();
+        syncMusicUI();
+      }
+    });
+
+    goCakeBtn.addEventListener("click", () => {
+      showView("cake");
+    });
+
+    backBookBtn.addEventListener("click", () => {
+      showView("book");
+    });
+
+    burstBtn.addEventListener("click", () => burstConfetti(220));
+
+    // Mum söndürmek şarkıyı durdurmaz
+    document.getElementById("blowBtn").addEventListener("click", () => {
+      setFlame(false);
+    });
+
+    // Pastaya tıkla: mum toggle
+    document.querySelector(".cake").addEventListener("click", () => {
+      const off = flame.classList.contains("off");
+      setFlame(off);
+    });
+
+    song.addEventListener("play", syncMusicUI);
+    song.addEventListener("pause", syncMusicUI);
+    song.addEventListener("ended", () => {
+      // loop açık ama yine de bir konfeti patlatalım (bazı tarayıcılarda ended tetiklenebilir)
+      burstConfetti(220);
+    });
+  </script>
+</body>
+</html>
