@@ -6,43 +6,43 @@
   <title>İyi ki doğdun Kübra!</title>
   <style>
     :root{
-      --bg1:#0b1020; --bg2:#1a2a6c;
-      --paper:#f7f2e7;
-      --ink:#1b1b1b;
-      --shadow: rgba(0,0,0,.35);
+      --bg: #F4B4C4;   /* ✅ tek ton toz pembe */
+      --card: rgba(255,255,255,.18);
+      --cardBorder: rgba(255,255,255,.30);
+      --shadow: rgba(0,0,0,.25);
       --accent1:#ffd56a;
       --accent2:#ff9bd1;
-      --accent3:#4fb9ff;
-      --radius:24px;
+      --ink:#1b1b1b;
     }
+
     *{ box-sizing:border-box; }
 
-    /* ✅ SCROLL AÇIK + altta audio bar için boşluk */
+    /* ✅ Arka plan her yerde tek renk + scroll açık */
+    html, body { height: 100%; }
     body{
       margin:0;
       min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:#fff;
-      background: #F4B4C4;
-      /* eskiden overflow:hidden vardı -> kaydırmayı engelliyordu */
+
+      background: var(--bg) !important;  /* ✅ bordo/gradient kalmasın */
       overflow-x:hidden;
       overflow-y:auto;
+
+      display:flex;
+      justify-content:center;
       padding: 18px;
-      padding-bottom: 120px; /* ✅ audio bar butonları kapatmasın */
+      padding-bottom: 120px; /* audio bar kapatmasın */
     }
 
     .card{
-      width:min(900px, 96vw);
+      width:min(860px, 96vw);
       padding: 18px;
-      border-radius: var(--radius);
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 22px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.18);
       box-shadow: 0 18px 50px var(--shadow);
       backdrop-filter: blur(10px);
-      position:relative;
     }
 
     .view{ display:none; }
@@ -56,133 +56,66 @@
       margin: 0 0 6px;
       font-size: clamp(22px, 3.6vw, 38px);
       letter-spacing: .2px;
+      color: #fff;
     }
     .header p{
-      margin: 0 0 8px;
+      margin:0;
       opacity:.92;
       font-size: clamp(14px, 2.2vw, 18px);
     }
 
-    /* BOOK (desktop/tablet) */
-    .bookWrap{
+    /* ✅ Giriş ekranı: Foto üstte, mesaj altta (kitap formatı yok) */
+    .introStack{
       display:flex;
-      justify-content:center;
-      padding: 8px 6px 2px;
-    }
-    .book{
-      width: min(860px, 92vw);
-      aspect-ratio: 16 / 10;
-      background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: 26px;
-      box-shadow: 0 22px 60px rgba(0,0,0,.35);
-      position:relative;
-      overflow:hidden;
-      padding: 18px;
-    }
-    .book::before{
-      content:"";
-      position:absolute; inset:0;
-      background: radial-gradient(900px 500px at 50% 50%, rgba(0,0,0,.08), transparent 60%);
-      pointer-events:none;
-    }
-
-    .pages{
-      position:relative;
-      width:100%;
-      height:100%;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
+      flex-direction:column;
       gap: 14px;
-      padding: 10px;
-    }
-    .page{
-      background: linear-gradient(180deg, #fbf7ef, #f2ecdf);
-      color: var(--ink);
-      border-radius: 18px;
-      position:relative;
-      overflow:hidden;
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,.06);
-    }
-    .spine{
-      position:absolute;
-      left:50%;
-      top: 10px;
-      bottom: 10px;
-      width: 34px;
-      transform: translateX(-50%);
-      background: linear-gradient(90deg, rgba(0,0,0,.10), rgba(0,0,0,.02), rgba(0,0,0,.10));
-      border-radius: 18px;
-      pointer-events:none;
-      filter: blur(.2px);
-      opacity:.65;
+      margin-top: 10px;
     }
 
-    .photoFrame{
-      height: 100%;
+    .panel{
+      background: var(--card);
+      border: 1px solid var(--cardBorder);
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.18);
+      overflow:hidden;
+    }
+
+    .photoBox{
+      width: 100%;
+      height: min(58vh, 520px);
       display:flex;
       align-items:center;
       justify-content:center;
-      padding: 18px;
-    }
-    .photoMat{
-      width: 92%;
-      height: 86%;
-      border-radius: 18px;
-      background: #fff;
-      box-shadow:
-        0 18px 30px rgba(0,0,0,.18),
-        inset 0 0 0 10px rgba(255,255,255,.85),
-        inset 0 0 0 1px rgba(0,0,0,.08);
-      position:relative;
-      overflow:hidden;
-    }
-    .photoMat img{
-      position:absolute;
-      top:50%;
-      left:50%;
-      /* ✅ 90 derece SOLA */
-      transform: translate(-50%, -50%) rotate(-90deg) scale(1.1);
-      height: 120%;
-      width: auto;
-      object-fit: cover;
-      filter: saturate(1.05) contrast(1.02);
+      padding: 12px;
+      background: rgba(255,255,255,.14);
     }
 
-    .msg{
-      padding: 22px 22px 18px;
-      height:100%;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      gap: 12px;
+    /* ✅ Foto KIRPILMAZ: contain + döndürme sola */
+    .photoBox img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;          /* ✅ tam görünsün */
+      transform: rotate(-90deg);    /* ✅ 90° sola */
+      transform-origin: center;
+      border-radius: 14px;
+      background: rgba(255,255,255,.55); /* boşluk kalırsa hoş dursun */
     }
-    .msg h2{
-      margin:0;
+
+    .msgBox{
+      padding: 18px;
+      color: rgba(0,0,0,.88);
+      background: rgba(255,255,255,.65);
+    }
+    .msgBox h2{
+      margin: 0 0 10px;
       font-size: clamp(18px, 2.8vw, 26px);
-      letter-spacing:.2px;
+      color: rgba(0,0,0,.88);
     }
-    .msg p{
+    .msgBox p{
       margin:0;
-      font-size: clamp(14px, 2.3vw, 18px);
-      line-height: 1.55;
+      font-size: clamp(14px, 2.2vw, 18px);
+      line-height: 1.6;
       color: rgba(0,0,0,.78);
-    }
-    .msg .sig{
-      margin-top: 8px;
-      font-weight: 700;
-      color: rgba(0,0,0,.72);
-      opacity:.95;
-    }
-    .msg .highlight{
-      display:inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(79,185,255,.22);
-      border: 1px solid rgba(79,185,255,.35);
-      color: rgba(0,0,0,.72);
-      font-weight: 700;
-      width: fit-content;
     }
 
     .controls{
@@ -192,6 +125,7 @@
       flex-wrap:wrap;
       margin-top: 14px;
     }
+
     button{
       border:0;
       padding: 12px 16px;
@@ -200,20 +134,19 @@
       cursor:pointer;
       color:#111;
       background: linear-gradient(135deg, var(--accent1), var(--accent2));
-      box-shadow: 0 10px 24px rgba(0,0,0,.25);
-      transition: transform .08s ease, opacity .15s ease;
+      box-shadow: 0 10px 24px rgba(0,0,0,.22);
+      transition: transform .08s ease;
     }
     button:active{ transform: translateY(1px) scale(.99); }
-    .ghost{
-      background: rgba(255,255,255,.12);
-      color:#fff;
-      border: 1px solid rgba(255,255,255,.2);
-    }
-    .mini{
-      padding: 10px 14px;
-      font-weight: 800;
-    }
 
+    .ghost{
+      background: rgba(255,255,255,.20);
+      color:#fff;
+      border: 1px solid rgba(255,255,255,.30);
+    }
+    .mini{ padding: 10px 14px; }
+
+    /* Bottom audio bar */
     .audioBar{
       position: fixed;
       left: 50%;
@@ -236,6 +169,7 @@
       white-space: nowrap;
     }
 
+    /* Autoplay blocked overlay */
     .autoplayOverlay{
       position: fixed;
       inset:0;
@@ -251,16 +185,17 @@
       width: min(520px, 92vw);
       padding: 18px;
       border-radius: 18px;
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.22);
       backdrop-filter: blur(12px);
       box-shadow: 0 22px 60px rgba(0,0,0,.35);
       text-align:center;
+      color:#fff;
     }
     .autoplayCard h3{ margin: 0 0 6px; font-size: 18px; }
     .autoplayCard p{ margin: 0 0 12px; opacity:.92; }
 
-    /* Cake */
+    /* Cake (aynı kaldı) */
     .cakeWrap{
       display:flex;
       justify-content:center;
@@ -365,42 +300,6 @@
     @keyframes fall{
       to{ transform: translateY(110vh) rotate(720deg); }
     }
-
-    /* ✅ MOBILE: kitap görünümünü "foto üstte + mesaj altta" yap */
-    @media (max-width: 820px){
-      .book{
-        aspect-ratio: auto;
-        padding: 14px;
-      }
-      .pages{
-        display:flex;
-        flex-direction:column;
-        gap: 12px;
-        padding: 8px;
-        height: auto;
-      }
-      .spine{ display:none; }
-
-      /* sayfa görünümü daha "card" gibi olsun */
-      .page{
-        border-radius: 18px;
-      }
-
-      /* foto alanı mobilde daha kısa/temiz */
-      .photoFrame{ padding: 14px; }
-      .photoMat{
-        width: 100%;
-        height: 320px;   /* ✅ mobilde foto üstte sabit yükseklik */
-      }
-      .photoMat img{
-        transform: translate(-50%,-50%) rotate(-90deg) scale(1.18); /* ✅ sola döndürme korunuyor */
-      }
-
-      .msg{
-        padding: 18px 18px 14px;
-        justify-content:flex-start;
-      }
-    }
   </style>
 </head>
 <body>
@@ -416,51 +315,41 @@
 
   <main class="card" role="main">
 
+    <!-- VIEW 1 -->
     <section class="view active" id="viewBook">
       <div class="header">
-        <h1>📖 Doğum Günün Kutlu Olsun Kübra!</h1>
-        <p>Sayfayı çevirince sürpriz var 🎂</p>
+        <h1>Doğum Günün Kutlu Olsun Kübra! 🎉</h1>
       </div>
 
-      <div class="bookWrap">
-        <div class="book" aria-label="Açık kitap">
-          <div class="spine" aria-hidden="true"></div>
-          <div class="pages">
-            <div class="page" aria-label="Sol sayfa: fotoğraf">
-              <div class="photoFrame">
-                <div class="photoMat">
-                  <img id="bookPhoto" alt="Fotoğraf" src="Snapchat-3435158.jpg" />
-                </div>
-              </div>
-            </div>
-
-            <div class="page" aria-label="Sağ sayfa: mesaj">
-              <div class="msg">
-                <span class="highlight">💛 8 yılın hatrına</span>
-                <h2>Doğum günün kutlu olsun Kübra!</h2>
-                <p>
-                  Doğum günün kutlu olsun Kübra, iyi ki doğdunnn.
-                  Yeni yaşın mutluluk ve sağlık dolu olsun.
-                  Birlikte geçirdiğimiz 8 yılın her anı çok güzeldi,
-                  daha nice yılları beraber geçirelimm.
-                </p>
-                <div class="sig">— 💫</div>
-              </div>
-            </div>
+      <div class="introStack">
+        <div class="panel">
+          <div class="photoBox">
+            <img id="bookPhoto" alt="Fotoğraf" src="Snapchat-3435158.jpg" />
           </div>
+        </div>
+
+        <div class="panel msgBox">
+          <h2>İyi ki doğdunnn 💖</h2>
+          <p>
+            Doğum günün kutlu olsun Kübra, iyi ki doğdunnn.
+            Yeni yaşın mutluluk ve sağlık dolu olsun.
+            Birlikte geçirdiğimiz 8 yılın her anı çok güzeldi,
+            daha nice yılları beraber geçirelimm.
+          </p>
         </div>
       </div>
 
-      <div class="controls" aria-label="Kontroller">
+      <div class="controls">
         <button id="goCakeBtn">Pastaya geç 🎂</button>
         <button id="burstBtn" class="ghost">Konfeti patlat ✨</button>
       </div>
     </section>
 
+    <!-- VIEW 2 -->
     <section class="view" id="viewCake">
       <div class="header">
-        <h1 id="title">🎉 İyi ki doğdun Kübra!</h1>
-        <p class="sub" id="subtitle">Dilek tut ve mumu üfle ✨</p>
+        <h1>🎂 Kübra için pasta zamanı!</h1>
+        <p>Mumu üfle ✨</p>
       </div>
 
       <section class="cakeWrap" aria-label="Doğum günü pastası">
@@ -483,7 +372,7 @@
 
       <div class="controls">
         <button id="blowBtn" class="ghost">Mumu Söndür 💨</button>
-        <button id="backBookBtn">Kitaba dön 📖</button>
+        <button id="backBookBtn">Geri dön ↩️</button>
       </div>
     </section>
 
@@ -520,7 +409,7 @@
     bookPhoto.src = BOOK_PHOTO;
     song.src = AUDIO_SRC;
 
-    function burstConfetti(count = 120) {
+    function burstConfetti(count = 140) {
       for (let i = 0; i < count; i++) {
         const p = document.createElement("div");
         p.className = "piece";
@@ -539,7 +428,7 @@
 
     function setFlame(on) {
       flame.classList.toggle("off", !on);
-      if (!on) burstConfetti(170);
+      if (!on) burstConfetti(180);
     }
 
     function showView(which) {
@@ -551,7 +440,6 @@
         viewCake.classList.remove("active");
         viewBook.classList.add("active");
       }
-      // ✅ ekran değişince en üste kaydır (butonlar kaybolmasın)
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -566,7 +454,7 @@
         song.currentTime = 0;
         await song.play();
         syncMusicUI();
-      } catch (e) {
+      } catch {
         autoplayOverlay.classList.add("active");
         autoplayOverlay.setAttribute("aria-hidden", "false");
         syncMusicUI();
@@ -580,14 +468,14 @@
         autoplayOverlay.setAttribute("aria-hidden", "true");
         syncMusicUI();
         burstConfetti(120);
-      } catch (e) {
+      } catch {
         alert("Ses başlatılamadı. Telefon sessizde olmasın ve tekrar dene.");
       }
     }
 
     window.addEventListener("load", () => {
       setFlame(true);
-      burstConfetti(80);
+      burstConfetti(60);
       tryAutoplay();
     });
 
@@ -600,7 +488,7 @@
 
     goCakeBtn.addEventListener("click", () => showView("cake"));
     backBookBtn.addEventListener("click", () => showView("book"));
-    burstBtn.addEventListener("click", () => burstConfetti(220));
+    burstBtn.addEventListener("click", () => burstConfetti(240));
 
     document.getElementById("blowBtn").addEventListener("click", () => setFlame(false));
 
